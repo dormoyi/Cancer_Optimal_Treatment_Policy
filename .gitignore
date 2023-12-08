@@ -2,3 +2,7 @@ __pycache__
 *.csv
 *.pkl
 results
+*.index
+*checkpoint
+*.ckpt*
+*.p
