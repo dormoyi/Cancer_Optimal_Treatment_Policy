@@ -27,16 +27,12 @@ def load_optimal_parameters(net_name, expt_name, select_max=False, add_net_name=
 
     hyperparam_df = helpers.load_hyperparameter_results(model_folder, net_name)
 
-    validation_scores = hyperparam_df.loc["validation_loss"]
+    print(hyperparam_df.columns)
+    col = hyperparam_df.columns[0]
+    validation_scores = hyperparam_df[col]["validation_loss"]
 
-    # Select optimal
-    if select_max:
-        best_score = validation_scores.max()
-    else:
-        best_score = validation_scores.min()
 
-    names = np.array(validation_scores.index)
-    best_expt = names[validation_scores==best_score][0]
+    best_expt = col
 
     serialisation_string = best_expt.replace(expt_name+"_", "")
     params = get_parameters_from_string(serialisation_string)

@@ -80,8 +80,8 @@ if __name__ == "__main__":
         scaling_data = main_map['scaling_data']
 
         for window_size in window_sizes:
-            for chemo_coeff in [i for i in range(max_coeff + 1)]:
-                for radio_coeff in [i for i in range(max_coeff + 1)]:
+            for chemo_coeff in [2]:
+                for radio_coeff in [2]:
 
                     logging.info("Processing {} chemo_coeff={}, radio_coeff={}".format(net_name, chemo_coeff, radio_coeff))
 
