@@ -38,12 +38,14 @@ if __name__ == '__main__':
     if not os.path.exists(models_dir):
         os.mkdir(models_dir)
 
+    print("Testing encoder")
     rmse_encoder = test_CRN_encoder(pickle_map=pickle_map, models_dir=models_dir,
                                     encoder_model_name=encoder_model_name,
                                     encoder_hyperparams_file=encoder_hyperparams_file,
                                     b_encoder_hyperparm_tuning=args.b_encoder_hyperparm_tuning)
 
 
+    print("Testing decoder")
     decoder_model_name = 'decoder_' + args.model_name
     decoder_hyperparams_file = '{}/{}_best_hyperparams.txt'.format(args.results_dir, decoder_model_name)
 
@@ -56,18 +58,18 @@ if __name__ == '__main__':
     max_projection_horizon = 5
     projection_horizon = 5
     
-    rmse_decoder = test_CRN_decoder(pickle_map=pickle_map, max_projection_horizon=max_projection_horizon,
-                                    projection_horizon=projection_horizon,
-                                    models_dir=models_dir,
-                                    encoder_model_name=encoder_model_name,
-                                    encoder_hyperparams_file=encoder_hyperparams_file,
-                                    decoder_model_name=decoder_model_name,
-                                    decoder_hyperparams_file=decoder_hyperparams_file,
-                                    b_decoder_hyperparm_tuning=args.b_decoder_hyperparm_tuning)
+    # rmse_decoder = test_CRN_decoder(pickle_map=pickle_map, max_projection_horizon=max_projection_horizon,
+    #                                 projection_horizon=projection_horizon,
+    #                                 models_dir=models_dir,
+    #                                 encoder_model_name=encoder_model_name,
+    #                                 encoder_hyperparams_file=encoder_hyperparams_file,
+    #                                 decoder_model_name=decoder_model_name,
+    #                                 decoder_hyperparams_file=decoder_hyperparams_file,
+    #                                 b_decoder_hyperparm_tuning=args.b_decoder_hyperparm_tuning)
 
     logging.info("Chemo coeff {} | Radio coeff {}".format(args.chemo_coeff, args.radio_coeff))
     print("RMSE for one-step-ahead prediction.")
     print(rmse_encoder)
 
-    print("Results for 5-step-ahead prediction.")
-    print(rmse_decoder)
+    # print("Results for 5-step-ahead prediction.")
+    # print(rmse_decoder)

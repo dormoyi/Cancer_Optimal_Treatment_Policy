@@ -3,12 +3,15 @@
 import tensorflow as tf
 from tensorflow.contrib.rnn import LSTMCell, DropoutWrapper
 from tensorflow.python.ops import rnn
+import pandas as pd
 
 from utils.flip_gradient import flip_gradient
 import numpy as np
 import os
 
 import logging
+from time import time
+
 
 
 class CRN_Model:
@@ -419,11 +422,18 @@ class CRN_Model:
                    / tf.reduce_sum(active_entries)
 
         return mse_loss
+    
 
     def evaluate_predictions(self, dataset):
+        start = time()
         predictions = self.get_predictions(dataset)
+        print('time to get predictions: ', time() - start)
+        print('predictions shape: ', predictions.shape)
+        np.save('predictions_CRN.npy', predictions)
         unscaled_predictions = predictions * dataset['output_stds'] \
                                + dataset['output_means']
+        print('output means: ', dataset['output_means'])
+        print('output stds: ', dataset['output_stds'])
         unscaled_predictions = np.reshape(unscaled_predictions,
                                           newshape=(-1, self.max_sequence_length, self.num_outputs))
         unscaled_outputs = dataset['unscaled_outputs']
@@ -431,11 +441,17 @@ class CRN_Model:
 
         mse = self.get_mse_at_follow_up_time(unscaled_predictions, unscaled_outputs, active_entries)
         mean_mse = np.mean(mse)
-        return mean_mse, mse
+        nmse = self.get_normalized_mse_at_follow_up_time(unscaled_predictions, unscaled_outputs, active_entries)
+        mean_nmse = np.mean(nmse)
+        return mean_mse, nmse, mse
 
     def get_mse_at_follow_up_time(self, prediction, output, active_entires):
+        mses = np.sum(np.sum((prediction - output) ** 2 * active_entires, axis=-1), axis=0) 
+        return mses
+    
+    def get_normalized_mse_at_follow_up_time(self, prediction, output, active_entires):
         mses = np.sum(np.sum((prediction - output) ** 2 * active_entires, axis=-1), axis=0) \
-               / active_entires.sum(axis=0).sum(axis=-1)
+               / active_entires.sum(axis=0).sum(axis=-1) 
         return mses
 
     def get_optimizer(self):
