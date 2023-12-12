@@ -40,7 +40,7 @@ def fit_CRN_encoder(dataset_train, dataset_val, model_name, model_dir, hyperpara
             logging.info("Current hyperparams used for training \n {}".format(hyperparams))
             model = CRN_Model(params, hyperparams)
             model.train(dataset_train, dataset_val, model_name, model_dir)
-            validation_mse, _ = model.evaluate_predictions(dataset_val)
+            validation_mse, _, _ = model.evaluate_predictions(dataset_val)
 
             if (validation_mse < best_validation_mse):
                 logging.info(
@@ -94,5 +94,5 @@ def test_CRN_encoder(pickle_map, models_dir,
     print("nRMSE: {}".format(rmse))
     not_normalized_rmse = np.sqrt(np.mean(mse)) / 1150 * 100  # Max tumour volume = 1150
     print("RMSE: {}".format(not_normalized_rmse))
-
+    
     return rmse

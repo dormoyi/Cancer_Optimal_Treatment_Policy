@@ -348,7 +348,7 @@ def test(training_dataset,
                   + training_dataset['output_means']
             LBs = np.concatenate(LBs, axis=0) * training_dataset['output_stds'] \
                   + training_dataset['output_means']
-            states = np.concatenate(states, axis=0)
+            # states = np.concatenate(states, axis=0)
 
             active_entries = test_dataset['active_entries'] \
                 if net_name != 'treatment_rnn' else training_dataset['active_entries']

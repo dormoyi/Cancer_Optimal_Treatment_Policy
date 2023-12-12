@@ -27,11 +27,11 @@ MODEL_ROOT = configs.MODEL_ROOT
 # EDIT ME! ################################################################################################
 # Defines specific parameters to train for - skips hyperparamter optimisation if so
 specifications = {
-     #'rnn_propensity_weighted': (0.1, 4, 100, 64, 0.01, 0.5),
-     #'treatment_rnn_action_inputs_only': (0.1, 3, 100, 128, 0.01, 2.0),
-     #'treatment_rnn': (0.1, 4, 100, 64, 0.01, 1.0),
-     #'censor_rnn_action_inputs_only': (0.2, 2, 100, 128, 0.01, 0.5),
-     #'censor_rnn': (0.1, 4, 100, 64, 0.01, 2.0),
+     'rnn_propensity_weighted': (0.1, 4, 100, 64, 0.01, 0.5),
+     'treatment_rnn_action_inputs_only': (0.1, 3, 100, 128, 0.01, 2.0),
+     'treatment_rnn': (0.1, 4, 100, 64, 0.01, 1.0),
+     'censor_rnn_action_inputs_only': (0.2, 2, 100, 128, 0.01, 0.5),
+     'censor_rnn': (0.1, 4, 100, 64, 0.01, 2.0),
 }
 ####################################################################################################################
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     for net_name in net_names:
 
         # Re-run hyperparameter optimisation if parameters are not specified, otherwise train with defined params
-        max_hyperparam_runs = 50 if net_name not in specifications else 1
+        max_hyperparam_runs = 1 if net_name not in specifications else 1
 
         # Pull datasets
         b_predict_actions = "treatment_rnn" in net_name
@@ -201,6 +201,7 @@ if __name__ == "__main__":
             if hyperparam_count == max_hyperparam_runs:
                 opt_params[net_name] = hyperparam_opt.T
                 break
+            break
 
         logging.info("Done")
         logging.info(hyperparam_opt.T)

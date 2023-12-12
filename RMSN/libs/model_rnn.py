@@ -133,7 +133,7 @@ class RnnModel:
         with tf.variable_scope(variable_scope_name):
             self.rnn_cell = tf.contrib.rnn.BasicLSTMCell(self.hidden_layer_size,
                                                          activation=_ACTIVATION_MAP[self.memory_activation_type],
-                                                         state_is_tuple=False,
+                                                         state_is_tuple=True,
                                                          name=variable_scope_name
                                                                 if variable_scope_name != "network" else None)
             self.output_activation = _ACTIVATION_MAP[self.output_activation_type]

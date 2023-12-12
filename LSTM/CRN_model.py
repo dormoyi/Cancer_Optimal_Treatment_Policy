@@ -3,15 +3,13 @@
 import tensorflow as tf
 from tensorflow.contrib.rnn import LSTMCell, DropoutWrapper
 from tensorflow.python.ops import rnn
-import pandas as pd
 
 from utils.flip_gradient import flip_gradient
 import numpy as np
 import os
-
-import logging
 from time import time
 
+import logging
 
 
 class CRN_Model:
@@ -103,7 +101,7 @@ class CRN_Model:
                                                                     treatment_predictions=self.treatment_prob_predictions,
                                                                     active_entries=self.active_entries)
         self.loss_outcomes = self.compute_loss_predictions(self.outputs, self.predictions, self.active_entries)
-        self.loss = self.loss_outcomes + self.loss_treatments
+        self.loss = self.loss_outcomes #+ self.loss_treatments
         optimizer = self.get_optimizer()
 
         # Setup tensorflow
@@ -146,7 +144,7 @@ class CRN_Model:
         validation_loss, validation_loss_outcomes, \
         validation_loss_treatments = self.compute_validation_loss(dataset_val)
 
-        validation_mse, _ = self.evaluate_predictions(dataset_val)
+        validation_mse, _, _ = self.evaluate_predictions(dataset_val)
 
         logging.info(
             "Epoch {} Summary| Validation total loss = {} | Validation outcome loss = {} | Validation treatment loss {} | Validation mse = {}".format(
@@ -422,14 +420,13 @@ class CRN_Model:
                    / tf.reduce_sum(active_entries)
 
         return mse_loss
-    
 
     def evaluate_predictions(self, dataset):
         start = time()
         predictions = self.get_predictions(dataset)
         print('time to get predictions: ', time() - start)
         print('predictions shape: ', predictions.shape)
-        # np.save('predictions_CRN.npy', predictions)
+        np.save('predictions_CRN.npy', predictions)
         unscaled_predictions = predictions * dataset['output_stds'] \
                                + dataset['output_means']
         print('output means: ', dataset['output_means'])
